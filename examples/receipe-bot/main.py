@@ -6,7 +6,6 @@ import json
 import os
 
 # Load your OpenAI API key
-# OpenAI.api_key = "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"
 OpenAI.api_key = os.getenv("RECEIPE_BOT_API_KEY")
 
 

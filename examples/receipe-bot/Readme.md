@@ -2,6 +2,8 @@
 
 Food Wizard is your virtual kitchen companion, designed to make cooking an enjoyable and hassle-free experience. Whether you're a seasoned chef or a beginner in the kitchen, Food Wizard is here to assist you in every step of your culinary journey. With its wide range of features, this AI-powered bot helps you discover, create, and savor delicious meals tailored to your preferences and skill level.
 
+[Demonstration Video](https://www.loom.com/share/5bd2b640a5544fdcbf643f423d887f3f)
+
 ## Key Features:
 
 1. **Personalized Recipe Recommendations:**
@@ -39,7 +41,7 @@ Food Wizard is your virtual kitchen companion, designed to make cooking an enjoy
    - If you have a positive experience or encounter any issues, you can share your feedback directly with Food Wizard.
    - Negative feedback helps Food Wizard improve its recommendations by avoiding similar suggestions in the future.
 
-**Benefits:**
+## Benefits:
 
 - **Effortless Meal Planning:** Food Wizard simplifies meal planning by suggesting recipes that match your preferences and available ingredients.
 

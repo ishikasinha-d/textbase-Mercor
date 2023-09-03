@@ -24,7 +24,7 @@ def get_calories(query:str):
 
     print("Query:", query)
     api_url = 'https://api.calorieninjas.com/v1/nutrition?query='
-    response = requests.get(api_url + query, headers={'X-Api-Key': os.getenv('CALORIE_API_KEY')})
+    response = requests.get(api_url + query, headers={'X-Api-Key': os.getenv('CALORIES_API_KEY')})
     if response.status_code == requests.codes.ok:
         print(response.text)
         data = response.json()
@@ -61,8 +61,7 @@ def get_cocktail(cocktail_name:str):
 
         return prettified_data
     else:
-        return "Umm, can't find ingrideints details for this beverage. :("
-        print("Error:", response.status_code, response.text)
+        return "Umm, can't find ingridients details for this beverage. :("
 
 def get_youtube_video(query:str):
     url = "https://youtube-search6.p.rapidapi.com/search/"
