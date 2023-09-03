@@ -1,7 +1,7 @@
 import json
 import requests
 
-data_file = 'examples/reciepe-bot/data.json'
+data_file = 'examples/receipe-bot/data.json'
 
 def give_feedback(dish_name:str, cuisine_type:str, feedback:bool):
     with open(data_file, 'r') as f:
