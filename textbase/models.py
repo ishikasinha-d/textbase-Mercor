@@ -64,7 +64,8 @@ class OpenAI:
             functions = functions
         )
 
-        return response["choices"][0]["message"]["content"]
+        print(json.dumps(response, indent=4))
+        return response["choices"][0]["message"] 
 
 class HuggingFace:
     api_key = None
