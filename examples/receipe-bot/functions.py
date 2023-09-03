@@ -1,5 +1,6 @@
 import json
 import requests
+import os
 
 data_file = 'examples/receipe-bot/data.json'
 
@@ -23,7 +24,7 @@ def get_calories(query:str):
 
     print("Query:", query)
     api_url = 'https://api.calorieninjas.com/v1/nutrition?query='
-    response = requests.get(api_url + query, headers={'X-Api-Key': 'xpgDcBFYnegMHckgUYUxFA==LtKi4Vk2NvxNDeWT'})
+    response = requests.get(api_url + query, headers={'X-Api-Key': os.getenv('CALORIE_API_KEY')})
     if response.status_code == requests.codes.ok:
         print(response.text)
         data = response.json()
@@ -44,3 +45,41 @@ def get_calories(query:str):
         print("Error:", response.status_code, response.text)
 
         return "Umm, can't find calories details for this dish. :("
+
+
+def get_cocktail(cocktail_name:str):
+    api_url = 'https://api.api-ninjas.com/v1/cocktail?name={}'.format(cocktail_name)
+    response = requests.get(api_url, headers={'X-Api-Key': os.getenv('COCKTAIL_API_KEY')})
+    if response.status_code == requests.codes.ok:
+        data = response.json()[0]
+        prettified_data = "Ingredients:\n\n"
+
+        for ingredient in data['ingredients']:
+            prettified_data += f"{ingredient}\n\n"
+
+        prettified_data += f"Instructions:\n\n{data['instructions']}"
+
+        return prettified_data
+    else:
+        return "Umm, can't find ingrideints details for this beverage. :("
+        print("Error:", response.status_code, response.text)
+
+def get_youtube_video(query:str):
+    url = "https://youtube-search6.p.rapidapi.com/search/"
+
+    querystring = {"query":query,"number":"5","country":"in","lang":"en"}
+
+    headers = {
+        "X-RapidAPI-Key": os.getenv('YOUTUBE_API_KEY'),
+        "X-RapidAPI-Host": "youtube-search6.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+    data = response.json()
+
+    prettified_data = "Heres the most relevant videos for your content:\n\n"
+
+    for i in range(0,5):
+        prettified_data = prettified_data + "https://www.youtube.com/watch?v="+data["videos"][i]["video_id"]+"\n\n"
+
+    return prettified_data

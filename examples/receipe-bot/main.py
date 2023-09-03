@@ -1,11 +1,13 @@
 from textbase import bot, Message
 from textbase.models import OpenAI
 from typing import List
-from functions import get_feedback, give_feedback, get_calories
+from functions import get_feedback, give_feedback, get_calories, get_cocktail, get_youtube_video
 import json
+import os
 
 # Load your OpenAI API key
-OpenAI.api_key = "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"
+# OpenAI.api_key = "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"
+OpenAI.api_key = os.getenv("RECEIPE_BOT_API_KEY")
 
 
 # Prompt for GPT-3.5 Turbo
@@ -37,14 +39,40 @@ functions = [
       }
     },
     {
-      "name": "get_calory_details",
-      "description": "template to give user calory details of a dish.",
+      "name": "get_calorie_details",
+      "description": "template to give user calorie details of a dish.",
       "parameters": {
         "type": "object",
         "properties": {
           "items": {
             "type": "string",
             "description": "comma separated list of items with their quantities"
+          },
+        }
+      }
+    },
+    {
+      "name": "get_cocktail_ingredients",
+      "description": "template to give user the ingredients of the cocktail in consideration",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cocktail_name": {
+            "type": "string",
+            "description": "name of the cocktail"
+          },
+        }
+      }
+    },
+    {
+      "name": "get_youtube_video_link",
+      "description": "template to give the most relevant youtube video link based on the query in concern",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "youtube query with exact keywords"
           },
         }
       }
@@ -64,25 +92,29 @@ def on_message(message_history: List[Message], state: dict = None):
     )
 
     if bot_response.get("function_call") is not None:
-        bot_response["content"] = "Thank you for your feedback!"
         function_args = json.loads(bot_response["function_call"]["arguments"])
 
-        if bot_response["function_call"]["name"] == "get_calory_details":
+        if bot_response["function_call"]["name"] == "get_calorie_details":
           # Call the function
           bot_response["content"] = get_calories(function_args.get("items", "Unknown"))
-        elif bot_response["function_call"]["name"] == "give_feedback":      
+        elif bot_response["function_call"]["name"] == "give_feedback":
+          bot_response["content"] = "Thank you for your feedback!"
           # Call the function
           give_feedback(
               dish_name=function_args.get("dish_name", "Unknown"),
               cuisine_type=function_args.get("cuisine_type", "Unknown"),
               feedback=function_args.get("feedback", "Unknown")
           )
+        elif bot_response["function_call"]["name"] == "get_cocktail_ingredients":
+          bot_response["content"] = get_cocktail(function_args.get("cocktail_name", "Unknown"))
+        elif bot_response["function_call"]["name"] == "get_youtube_video_link":
+          bot_response["content"] = get_youtube_video(function_args.get("query", "Unknown"))
 
     response = {
         "data": {
             "messages": [
                 {
-                    "data_type": "STRING",  
+                    "data_type": "STRING",
                     "value": bot_response["content"]
                 }
             ],
