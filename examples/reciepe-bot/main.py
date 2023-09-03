@@ -1,7 +1,7 @@
 from textbase import bot, Message
 from textbase.models import OpenAI
 from typing import List
-from functions import get_feedback, give_feedback
+from functions import get_feedback, give_feedback, get_calories
 import json
 
 # Load your OpenAI API key
@@ -35,6 +35,19 @@ functions = [
           }
         }
       }
+    },
+    {
+      "name": "get_calory_details",
+      "description": "template to give user calory details of a dish.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "string",
+            "description": "comma separated list of items with their quantities"
+          },
+        }
+      }
     }
   ]
 
@@ -54,12 +67,16 @@ def on_message(message_history: List[Message], state: dict = None):
         bot_response["content"] = "Thank you for your feedback!"
         function_args = json.loads(bot_response["function_call"]["arguments"])
 
-        # Call the function
-        give_feedback(
-            dish_name=function_args.get("dish_name", "Unknown"),
-            cuisine_type=function_args.get("cuisine_type", "Unknown"),
-            feedback=function_args.get("feedback", "Unknown")
-        )
+        if bot_response["function_call"]["name"] == "get_calory_details":
+          # Call the function
+          bot_response["content"] = get_calories(function_args.get("items", "Unknown"))
+        elif bot_response["function_call"]["name"] == "give_feedback":      
+          # Call the function
+          give_feedback(
+              dish_name=function_args.get("dish_name", "Unknown"),
+              cuisine_type=function_args.get("cuisine_type", "Unknown"),
+              feedback=function_args.get("feedback", "Unknown")
+          )
 
     response = {
         "data": {
